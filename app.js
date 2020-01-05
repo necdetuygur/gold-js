@@ -4,7 +4,7 @@ const GlobalCeyrek = 'https://www.whateverorigin.org/get?url=' + encodeURICompon
 const GlobalYarim = 'https://www.whateverorigin.org/get?url=' + encodeURIComponent('https://finanswebde.com/altin/yarim-altin') + '&callback=?';
 
 let data = {};
-let counter = 999;
+let counter = 99;
 
 function AddScript(src, callback) {
   var s = document.createElement('script');
