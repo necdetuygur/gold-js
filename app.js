@@ -4,6 +4,7 @@ const GlobalCeyrek = 'https://www.whateverorigin.org/get?url=' + encodeURICompon
 const GlobalYarim = 'https://www.whateverorigin.org/get?url=' + encodeURIComponent('https://finanswebde.com/altin/yarim-altin') + '&callback=?';
 
 let data = {};
+let counter = 999;
 
 function AddScript(src, callback) {
   var s = document.createElement('script');
@@ -31,15 +32,18 @@ const striptags = function (a) {
 }
 
 const Checker = function () {
-  if (
-    typeof data["GR_status"] === "undefined" ||
-    typeof data["CR_status"] === "undefined" ||
-    typeof data["YR_status"] === "undefined"
-  )
-    setTimeout(Checker, 100);
+  if (counter--)
+    if (
+      typeof data["GR_status"] === "undefined" ||
+      typeof data["CR_status"] === "undefined" ||
+      typeof data["YR_status"] === "undefined"
+    )
+      setTimeout(Checker, 100);
+    else
+      // console.log('data: ' + JSON.stringify(data, 2, 2));
+      Writer();
   else
-    // console.log('data: ' + JSON.stringify(data, 2, 2));
-    Writer();
+    document.write(`<h1><a href="${GlobalGram}">Click & Allow</a></h1>`);
 }
 
 const Writer = function () {
