@@ -1,7 +1,7 @@
-const GlobalUrl = 'http://www.whateverorigin.org/get?url=' + encodeURIComponent("http://www.ikd.sadearge.com/Firma/tablo.php") + '&callback=?';
-const GlobalGram = 'http://www.whateverorigin.org/get?url=' + encodeURIComponent('https://finanswebde.com/altin/gram-altin') + '&callback=?';
-const GlobalCeyrek = 'http://www.whateverorigin.org/get?url=' + encodeURIComponent('https://finanswebde.com/altin/ceyrek-altin') + '&callback=?';
-const GlobalYarim = 'http://www.whateverorigin.org/get?url=' + encodeURIComponent('https://finanswebde.com/altin/yarim-altin') + '&callback=?';
+const GlobalUrl = 'https://www.whateverorigin.org/get?url=' + encodeURIComponent("https://www.ikd.sadearge.com/Firma/tablo.php") + '&callback=?';
+const GlobalGram = 'https://www.whateverorigin.org/get?url=' + encodeURIComponent('https://finanswebde.com/altin/gram-altin') + '&callback=?';
+const GlobalCeyrek = 'https://www.whateverorigin.org/get?url=' + encodeURIComponent('https://finanswebde.com/altin/ceyrek-altin') + '&callback=?';
+const GlobalYarim = 'https://www.whateverorigin.org/get?url=' + encodeURIComponent('https://finanswebde.com/altin/yarim-altin') + '&callback=?';
 
 let data = {};
 
