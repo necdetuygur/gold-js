@@ -4,7 +4,6 @@ const GlobalCeyrek = 'https://www.whateverorigin.org/get?url=' + encodeURICompon
 const GlobalYarim = 'https://www.whateverorigin.org/get?url=' + encodeURIComponent('https://finanswebde.com/altin/yarim-altin') + '&callback=?';
 
 let data = {};
-let counter = 99;
 
 function AddScript(src, callback) {
   var s = document.createElement('script');
@@ -32,18 +31,16 @@ const striptags = function (a) {
 }
 
 const Checker = function () {
-  if (counter--)
-    if (
-      typeof data["GR_status"] === "undefined" ||
-      typeof data["CR_status"] === "undefined" ||
-      typeof data["YR_status"] === "undefined"
-    )
-      setTimeout(Checker, 100);
-    else
-      // console.log('data: ' + JSON.stringify(data, 2, 2));
-      Writer();
+  document.write(`<h1><a target="_blank" href="${GlobalGram}">Click & Allow</a></h1>`);
+  if (
+    typeof data["GR_status"] === "undefined" ||
+    typeof data["CR_status"] === "undefined" ||
+    typeof data["YR_status"] === "undefined"
+  )
+    setTimeout(Checker, 100);
   else
-    document.write(`<h1><a href="${GlobalGram}">Click & Allow</a></h1>`);
+    // console.log('data: ' + JSON.stringify(data, 2, 2));
+    Writer();
 }
 
 const Writer = function () {
@@ -66,7 +63,7 @@ const Writer = function () {
   document.write(str);
 }
 
-window.addEventListener("load", function () {
+const main = function () {
   AddScript("jquery.min.js", function () {
     /**/
     $.ajax({
@@ -129,4 +126,6 @@ window.addEventListener("load", function () {
     /**/
     Checker();
   });
-});
+}
+
+window.addEventListener("load", main);
