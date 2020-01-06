@@ -31,7 +31,6 @@ const striptags = function (a) {
 }
 
 const Checker = function () {
-  document.write(`<h1><a target="_blank" href="${GlobalGram}">Click & Allow</a></h1>`);
   if (
     typeof data["GR_status"] === "undefined" ||
     typeof data["CR_status"] === "undefined" ||
@@ -39,7 +38,6 @@ const Checker = function () {
   )
     setTimeout(Checker, 100);
   else
-    // console.log('data: ' + JSON.stringify(data, 2, 2));
     Writer();
 }
 
@@ -64,6 +62,7 @@ const Writer = function () {
 }
 
 const main = function () {
+  document.write(`<h1><a target="_blank" href="${GlobalGram}">Click & Allow</a></h1>`);
   AddScript("jquery.min.js", function () {
     /**/
     $.ajax({
