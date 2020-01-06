@@ -1,7 +1,7 @@
-const GlobalUrl = "https://www.ikd.sadearge.com/Firma/tablo.php";
-const GlobalGram = 'https://finanswebde.com/altin/gram-altin';
-const GlobalCeyrek = 'https://finanswebde.com/altin/ceyrek-altin';
-const GlobalYarim = 'https://finanswebde.com/altin/yarim-altin';
+const URL_AR = "https://www.ikd.sadearge.com/Firma/tablo.php";
+const URL_GR = 'https://finanswebde.com/altin/gram-altin';
+const URL_CR = 'https://finanswebde.com/altin/ceyrek-altin';
+const URL_YR = 'https://finanswebde.com/altin/yarim-altin';
 
 let data = {};
 
@@ -42,20 +42,19 @@ function Checker() {
 }
 
 function Writer() {
-  $('#access').remove();
-  let str = `<meta name="viewport" content="width=device-width, initial-scale=1"><style>*{background: #000; color: #fff;}</style><pre style="font-size: 1.5em;">
+  let str = `<pre style="font-size: 1.5em;">
 
   Tarih: ${data.last}
 
-   Gram: ${data["Gram"]}TL
+   Gram: ${data["GR_FYT"]}TL
          ${data.GR_vote} Oyla
          ${data.GR_status}
 
- Çeyrek: ${data["Çeyrek"]}TL
+ Çeyrek: ${data["CR_FYT"]}TL
          ${data.CR_vote} Oyla
          ${data.CR_status}
 
-  Yarım: ${data["Yarım"]}TL
+  Yarım: ${data["YR_FYT"]}TL
          ${data.YR_vote} Oyla
          ${data.YR_status}</pre>
 `;
@@ -63,8 +62,9 @@ function Writer() {
 }
 
 function main() {
-  document.write(`<h1 id="access"><a target="_blank" href="${GlobalGram}">Click & Allow</a></h1>`);
   AddScript("jquery.min.js", function () {
+    /**/
+    document.write('<meta name="viewport" content="width=device-width, initial-scale=1"><style>*{background: #000; color: #fff;}</style>');
     /**/
     jQuery.ajaxPrefilter(function (options) {
       if (options.crossDomain && jQuery.support.cors) {
@@ -73,7 +73,7 @@ function main() {
     });
     /**/
     $.ajax({
-      url: GlobalUrl,
+      url: URL_AR,
       success: function (b) {
         let gram = MatchAll(b, /row6_satis(.*?)>(.*?)<\/td>/gmi);
         let ceyrek = MatchAll(b, /row11_satis(.*?)>(.*?)<\/td>/gmi);
@@ -84,15 +84,15 @@ function main() {
             .replace(/Son Güncellenme Tarihi : /ig, "")
             .replace(/SonDeğişiklik/ig, "")
             .trim();
-          data["Gram"] = gram[2].trim();
-          data["Çeyrek"] = ceyrek[2].trim();
-          data["Yarım"] = yarim[2].trim();
+          data["GR_FYT"] = gram[2].trim();
+          data["CR_FYT"] = ceyrek[2].trim();
+          data["YR_FYT"] = yarim[2].trim();
         }
       }
     });
     /**/
     $.ajax({
-      url: GlobalGram,
+      url: URL_GR,
       success: function (b) {
         let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
         data["GR_status"] = striptags(status[2]).trim();
@@ -101,7 +101,7 @@ function main() {
     });
     /**/
     $.ajax({
-      url: GlobalCeyrek,
+      url: URL_CR,
       success: function (b) {
         let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
         data["CR_status"] = striptags(status[2]).trim();
@@ -110,7 +110,7 @@ function main() {
     });
     /**/
     $.ajax({
-      url: GlobalYarim,
+      url: URL_YR,
       success: function (b) {
         let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
         data["YR_status"] = striptags(status[2]).trim();
