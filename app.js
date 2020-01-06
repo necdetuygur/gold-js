@@ -63,63 +63,69 @@ function Writer() {
 
 function main() {
   AddScript("jquery.min.js", function () {
-    /**/
-    document.write('<meta name="viewport" content="width=device-width, initial-scale=1"><style>*{background: #000; color: #fff;}</style>');
-    /**/
-    jQuery.ajaxPrefilter(function (options) {
-      if (options.crossDomain && jQuery.support.cors) {
-        options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
-      }
-    });
-    /**/
-    $.ajax({
-      url: URL_AR,
-      success: function (b) {
-        let gram = MatchAll(b, /row6_satis(.*?)>(.*?)<\/td>/gmi);
-        let ceyrek = MatchAll(b, /row11_satis(.*?)>(.*?)<\/td>/gmi);
-        let yarim = MatchAll(b, /row12_satis(.*?)>(.*?)<\/td>/gmi);
-        let last = MatchAll(b, /tarih(.*?)>(.*?)<\/span>/gmi);
-        if (gram[2] != undefined && ceyrek[2] != undefined && yarim[2] != undefined) {
-          data["last"] = last[2].trim()
-            .replace(/Son Güncellenme Tarihi : /ig, "")
-            .replace(/SonDeğişiklik/ig, "")
-            .trim();
-          data["GR_FYT"] = gram[2].trim();
-          data["CR_FYT"] = ceyrek[2].trim();
-          data["YR_FYT"] = yarim[2].trim();
+    AddScript("jquery.ajax-cross-origin.min.js", function () {
+      /**/
+      document.write('<meta name="viewport" content="width=device-width, initial-scale=1"><style>*{background: #000; color: #fff;}</style>');
+      /**/
+      // jQuery.ajaxPrefilter(function (options) {
+      //   if (options.crossDomain && jQuery.support.cors) {
+      //     options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
+      //   }
+      // });
+      /**/
+      $.ajax({
+        url: URL_AR,
+        crossOrigin: true,
+        success: function (b) {
+          let gram = MatchAll(b, /row6_satis(.*?)>(.*?)<\/td>/gmi);
+          let ceyrek = MatchAll(b, /row11_satis(.*?)>(.*?)<\/td>/gmi);
+          let yarim = MatchAll(b, /row12_satis(.*?)>(.*?)<\/td>/gmi);
+          let last = MatchAll(b, /tarih(.*?)>(.*?)<\/span>/gmi);
+          if (gram[2] != undefined && ceyrek[2] != undefined && yarim[2] != undefined) {
+            data["last"] = last[2].trim()
+              .replace(/Son Güncellenme Tarihi : /ig, "")
+              .replace(/SonDeğişiklik/ig, "")
+              .trim();
+            data["GR_FYT"] = gram[2].trim();
+            data["CR_FYT"] = ceyrek[2].trim();
+            data["YR_FYT"] = yarim[2].trim();
+          }
         }
-      }
+      });
+      /**/
+      $.ajax({
+        url: URL_GR,
+        crossOrigin: true,
+        success: function (b) {
+          let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
+          data["GR_status"] = striptags(status[2]).trim();
+          data["GR_vote"] = striptags(status[7]).trim();
+        }
+      });
+      /**/
+      $.ajax({
+        url: URL_CR,
+        crossOrigin: true,
+        success: function (b) {
+          let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
+          data["CR_status"] = striptags(status[2]).trim();
+          data["CR_vote"] = striptags(status[7]).trim();
+        }
+      });
+      /**/
+      $.ajax({
+        url: URL_YR,
+        crossOrigin: true,
+        success: function (b) {
+          let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
+          data["YR_status"] = striptags(status[2]).trim();
+          data["YR_vote"] = striptags(status[7]).trim();
+        }
+      });
+      /**/
+      Checker();
+      /**/
     });
-    /**/
-    $.ajax({
-      url: URL_GR,
-      success: function (b) {
-        let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
-        data["GR_status"] = striptags(status[2]).trim();
-        data["GR_vote"] = striptags(status[7]).trim();
-      }
-    });
-    /**/
-    $.ajax({
-      url: URL_CR,
-      success: function (b) {
-        let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
-        data["CR_status"] = striptags(status[2]).trim();
-        data["CR_vote"] = striptags(status[7]).trim();
-      }
-    });
-    /**/
-    $.ajax({
-      url: URL_YR,
-      success: function (b) {
-        let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
-        data["YR_status"] = striptags(status[2]).trim();
-        data["YR_vote"] = striptags(status[7]).trim();
-      }
-    });
-    /**/
-    Checker();
-    /**/
   });
 }
 
