@@ -1,7 +1,7 @@
-const GlobalUrl = 'https://www.whateverorigin.org/get?url=' + encodeURIComponent("https://www.ikd.sadearge.com/Firma/tablo.php") + '&callback=?';
-const GlobalGram = 'https://www.whateverorigin.org/get?url=' + encodeURIComponent('https://finanswebde.com/altin/gram-altin') + '&callback=?';
-const GlobalCeyrek = 'https://www.whateverorigin.org/get?url=' + encodeURIComponent('https://finanswebde.com/altin/ceyrek-altin') + '&callback=?';
-const GlobalYarim = 'https://www.whateverorigin.org/get?url=' + encodeURIComponent('https://finanswebde.com/altin/yarim-altin') + '&callback=?';
+const GlobalUrl = "https://www.ikd.sadearge.com/Firma/tablo.php";
+const GlobalGram = 'https://finanswebde.com/altin/gram-altin';
+const GlobalCeyrek = 'https://finanswebde.com/altin/ceyrek-altin';
+const GlobalYarim = 'https://finanswebde.com/altin/yarim-altin';
 
 let data = {};
 
@@ -12,7 +12,7 @@ function AddScript(src, callback) {
   document.body.appendChild(s);
 }
 
-const MatchAll = function (str, regex) {
+function MatchAll(str, regex) {
   let m;
   let ret = {};
   while ((m = regex.exec(str)) !== null) {
@@ -26,11 +26,11 @@ const MatchAll = function (str, regex) {
   return ret;
 }
 
-const striptags = function (a) {
+function striptags(a) {
   return a.replace(/<\/?[^>]+(>|$)/g, "");
 }
 
-const Checker = function () {
+function Checker() {
   if (
     typeof data["GR_status"] === "undefined" ||
     typeof data["CR_status"] === "undefined" ||
@@ -41,7 +41,7 @@ const Checker = function () {
     Writer();
 }
 
-const Writer = function () {
+function Writer() {
   $('#access').remove();
   let str = `<meta name="viewport" content="width=device-width, initial-scale=1"><style>*{background: #000; color: #fff;}</style><pre style="font-size: 1.5em;">
 
@@ -62,16 +62,19 @@ const Writer = function () {
   document.write(str);
 }
 
-const main = function () {
+function main() {
   document.write(`<h1 id="access"><a target="_blank" href="${GlobalGram}">Click & Allow</a></h1>`);
   AddScript("jquery.min.js", function () {
     /**/
+    jQuery.ajaxPrefilter(function (options) {
+      if (options.crossDomain && jQuery.support.cors) {
+        options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
+      }
+    });
+    /**/
     $.ajax({
       url: GlobalUrl,
-      async: false,
-      dataType: 'json',
-      success: function (json) {
-        b = json.contents;
+      success: function (b) {
         let gram = MatchAll(b, /row6_satis(.*?)>(.*?)<\/td>/gmi);
         let ceyrek = MatchAll(b, /row11_satis(.*?)>(.*?)<\/td>/gmi);
         let yarim = MatchAll(b, /row12_satis(.*?)>(.*?)<\/td>/gmi);
@@ -90,10 +93,7 @@ const main = function () {
     /**/
     $.ajax({
       url: GlobalGram,
-      async: false,
-      dataType: 'json',
-      success: function (json) {
-        b = json.contents;
+      success: function (b) {
         let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
         data["GR_status"] = striptags(status[2]).trim();
         data["GR_vote"] = striptags(status[7]).trim();
@@ -102,10 +102,7 @@ const main = function () {
     /**/
     $.ajax({
       url: GlobalCeyrek,
-      async: false,
-      dataType: 'json',
-      success: function (json) {
-        b = json.contents;
+      success: function (b) {
         let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
         data["CR_status"] = striptags(status[2]).trim();
         data["CR_vote"] = striptags(status[7]).trim();
@@ -114,10 +111,7 @@ const main = function () {
     /**/
     $.ajax({
       url: GlobalYarim,
-      async: false,
-      dataType: 'json',
-      success: function (json) {
-        b = json.contents;
+      success: function (b) {
         let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
         data["YR_status"] = striptags(status[2]).trim();
         data["YR_vote"] = striptags(status[7]).trim();
@@ -125,6 +119,7 @@ const main = function () {
     });
     /**/
     Checker();
+    /**/
   });
 }
 
