@@ -42,6 +42,7 @@ const Checker = function () {
 }
 
 const Writer = function () {
+  $('#access').remove();
   let str = `<meta name="viewport" content="width=device-width, initial-scale=1"><style>*{background: #000; color: #fff;}</style><pre style="font-size: 1.5em;">
 
   Tarih: ${data.last}
@@ -62,7 +63,7 @@ const Writer = function () {
 }
 
 const main = function () {
-  document.write(`<h1><a target="_blank" href="${GlobalGram}">Click & Allow</a></h1>`);
+  document.write(`<h1 id="access"><a target="_blank" href="${GlobalGram}">Click & Allow</a></h1>`);
   AddScript("jquery.min.js", function () {
     /**/
     $.ajax({
