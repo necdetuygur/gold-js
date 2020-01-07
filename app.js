@@ -35,28 +35,44 @@ function Checker() {
     typeof data["GR_status"] === "undefined" ||
     typeof data["CR_status"] === "undefined" ||
     typeof data["YR_status"] === "undefined"
-  )
+  ) {
     setTimeout(Checker, 100);
-  else
     Writer();
+  } else {
+    Writer();
+    $('#loading').remove();
+  }
 }
 
 function Writer() {
-  let str = `<pre style="font-size: 1.5em;">
+  $('#content').remove();
 
-  Tarih: ${data.last}
+  let last = data.last === undefined ? "00-00-0000 00:00:00" : data.last;
+  let GR_FYT = data.GR_FYT === undefined ? "000,00" : data.GR_FYT;
+  let GR_vote = data.GR_vote === undefined ? "000" : data.GR_vote;
+  let GR_status = data.GR_status === undefined ? "%00 XXXXX" : data.GR_status;
+  let CR_FYT = data.CR_FYT === undefined ? "000,00" : data.CR_FYT;
+  let CR_vote = data.CR_vote === undefined ? "000" : data.CR_vote;
+  let CR_status = data.CR_status === undefined ? "%00 XXXXX" : data.CR_status;
+  let YR_FYT = data.YR_FYT === undefined ? "000,00" : data.YR_FYT;
+  let YR_vote = data.YR_vote === undefined ? "000" : data.YR_vote;
+  let YR_status = data.YR_status === undefined ? "%00 XXXXX" : data.YR_status;
 
-   Gram: ${data["GR_FYT"]}TL
-         ${data.GR_vote} Oyla
-         ${data.GR_status}
+  let str = `<pre id="content" style="font-size: 1.5em;">
 
- Çeyrek: ${data["CR_FYT"]}TL
-         ${data.CR_vote} Oyla
-         ${data.CR_status}
+  Tarih: ${last}
 
-  Yarım: ${data["YR_FYT"]}TL
-         ${data.YR_vote} Oyla
-         ${data.YR_status}</pre>
+   Gram: ${GR_FYT}TL
+         ${GR_vote} Oyla
+         ${GR_status}
+
+ Çeyrek: ${CR_FYT}TL
+         ${CR_vote} Oyla
+         ${CR_status}
+
+  Yarım: ${YR_FYT}TL
+         ${YR_vote} Oyla
+         ${YR_status}</pre>
 `;
   document.write(str);
 }
@@ -65,17 +81,17 @@ function main() {
   AddScript("jquery.min.js", function () {
     AddScript("jquery.ajax-cross-origin.min.js", function () {
       /**/
-      document.write('<meta name="viewport" content="width=device-width, initial-scale=1"><style>*{background: #000; color: #fff;}</style>');
+      document.write('<meta name="viewport" content="width=device-width, initial-scale=1"><style>*{background: #112233; color: #efefef;}</style><center id="loading" style="position: fixed; top: 5%; left: 25%;"><img src="loading.gif" /></center>');
       /**/
-      // jQuery.ajaxPrefilter(function (options) {
-      //   if (options.crossDomain && jQuery.support.cors) {
-      //     options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
-      //   }
-      // });
+      jQuery.ajaxPrefilter(function (options) {
+        if (options.crossDomain && jQuery.support.cors) {
+          options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
+        }
+      });
       /**/
       $.ajax({
         url: URL_AR,
-        crossOrigin: true,
+        // crossOrigin: true,
         success: function (b) {
           let gram = MatchAll(b, /row6_satis(.*?)>(.*?)<\/td>/gmi);
           let ceyrek = MatchAll(b, /row11_satis(.*?)>(.*?)<\/td>/gmi);
@@ -95,7 +111,7 @@ function main() {
       /**/
       $.ajax({
         url: URL_GR,
-        crossOrigin: true,
+        // crossOrigin: true,
         success: function (b) {
           let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
           data["GR_status"] = striptags(status[2]).trim();
@@ -105,7 +121,7 @@ function main() {
       /**/
       $.ajax({
         url: URL_CR,
-        crossOrigin: true,
+        // crossOrigin: true,
         success: function (b) {
           let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
           data["CR_status"] = striptags(status[2]).trim();
@@ -115,7 +131,7 @@ function main() {
       /**/
       $.ajax({
         url: URL_YR,
-        crossOrigin: true,
+        // crossOrigin: true,
         success: function (b) {
           let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
           data["YR_status"] = striptags(status[2]).trim();
