@@ -81,7 +81,7 @@ function main() {
   AddScript("jquery.min.js", function () {
     AddScript("jquery.ajax-cross-origin.min.js", function () {
       /**/
-      document.write('<meta name="viewport" content="width=device-width, initial-scale=1"><style>*{background: #112233; color: #efefef;}</style><center id="loading" style="position: fixed; top: 5%; left: 25%;"><img src="loading.gif" /></center>');
+      document.write('<meta name="viewport" content="width=device-width, initial-scale=1"><style>*{background: #112233; color: #efefef;}</style><center id="loading" style="position: fixed; top: 5%; right: 5%;"><img src="loading.gif" /></center>');
       /**/
       jQuery.ajaxPrefilter(function (options) {
         if (options.crossDomain && jQuery.support.cors) {
