@@ -2,6 +2,7 @@ const URL_AR = "https://www.ikd.sadearge.com/Firma/tablo.php";
 const URL_GR = 'https://finanswebde.com/altin/gram-altin';
 const URL_CR = 'https://finanswebde.com/altin/ceyrek-altin';
 const URL_YR = 'https://finanswebde.com/altin/yarim-altin';
+const URL_TM = 'https://finanswebde.com/altin/tam-altin';
 
 let data = {};
 
@@ -34,7 +35,8 @@ function Checker() {
   if (
     typeof data["GR_status"] === "undefined" ||
     typeof data["CR_status"] === "undefined" ||
-    typeof data["YR_status"] === "undefined"
+    typeof data["YR_status"] === "undefined" ||
+    typeof data["TM_status"] === "undefined"
   ) {
     setTimeout(Checker, 100);
     Writer();
@@ -57,6 +59,9 @@ function Writer() {
   let YR_FYT = data.YR_FYT === undefined ? "000,00" : data.YR_FYT;
   let YR_vote = data.YR_vote === undefined ? "000" : data.YR_vote;
   let YR_status = data.YR_status === undefined ? "%00 XXXXX" : data.YR_status;
+  let TM_FYT = data.TM_FYT === undefined ? "000,00" : data.TM_FYT;
+  let TM_vote = data.TM_vote === undefined ? "000" : data.TM_vote;
+  let TM_status = data.TM_status === undefined ? "%00 XXXXX" : data.TM_status;
 
   let str = `<pre id="content" style="font-size: 1.5em;">
 
@@ -72,7 +77,11 @@ function Writer() {
 
   Yarım: ${YR_FYT}TL
          ${YR_vote} Oyla
-         ${YR_status}</pre>
+         ${YR_status}
+
+    Tam: ${TM_FYT}TL
+         ${TM_vote} Oyla
+         ${TM_status}</pre>
 `;
   document.write(str);
 }
@@ -96,8 +105,9 @@ function main() {
           let gram = MatchAll(b, /row6_satis(.*?)>(.*?)<\/td>/gmi);
           let ceyrek = MatchAll(b, /row11_satis(.*?)>(.*?)<\/td>/gmi);
           let yarim = MatchAll(b, /row12_satis(.*?)>(.*?)<\/td>/gmi);
+          let tam = MatchAll(b, /row13_satis(.*?)>(.*?)<\/td>/gmi);
           let last = MatchAll(b, /tarih(.*?)>(.*?)<\/span>/gmi);
-          if (gram[2] != undefined && ceyrek[2] != undefined && yarim[2] != undefined) {
+          if (gram[2] != undefined && ceyrek[2] != undefined && yarim[2] != undefined && tam[2] != undefined) {
             data["last"] = last[2].trim()
               .replace(/Son Güncellenme Tarihi : /ig, "")
               .replace(/SonDeğişiklik/ig, "")
@@ -105,6 +115,7 @@ function main() {
             data["GR_FYT"] = gram[2].trim();
             data["CR_FYT"] = ceyrek[2].trim();
             data["YR_FYT"] = yarim[2].trim();
+            data["TM_FYT"] = tam[2].trim();
           }
         }
       });
@@ -136,6 +147,16 @@ function main() {
           let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
           data["YR_status"] = striptags(status[2]).trim();
           data["YR_vote"] = striptags(status[7]).trim();
+        }
+      });
+      /**/
+      $.ajax({
+        url: URL_TM,
+        // crossOrigin: true,
+        success: function (b) {
+          let status = MatchAll(b, /<div class="col-md-6"><span class="detail-change(.*?)>(.*?)<!--(.*?)<\/span>(.*?)<span(.*?)class=\"detail-title-sm\">(.*?)<span>(.*?)<\/span>(.*?)<\/span>(.*?)/gmi);
+          data["TM_status"] = striptags(status[2]).trim();
+          data["TM_vote"] = striptags(status[7]).trim();
         }
       });
       /**/
